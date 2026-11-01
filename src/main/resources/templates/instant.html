@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="utf-8"></head>
+<body style="font-family:system-ui,-apple-system,Segoe UI,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#111827">
+  <h2 style="color:#4f46e5;margin:0 0 4px">JobRadar</h2>
+  <p style="margin:0 0 16px">Hi <span th:text="${name}">there</span>, a strong match just came in:</p>
+  <th:block th:each="card : ${cards}"><div th:replace="~{fragments :: card(${card})}"></div></th:block>
+  <p style="font-size:12px;color:#6b7280">See everything on your <a th:href="${frontendUrl} + '/jobs'" style="color:#4f46e5">jobs feed</a>.</p>
+</body>
+</html>

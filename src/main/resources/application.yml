@@ -1,0 +1,58 @@
+spring:
+  application.name: match-notify-service
+  config.import: optional:file:.env[.properties]
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/jobradar_match}
+    username: ${DB_USER:jobradar}
+    password: ${DB_PASSWORD:jobradar}
+    hikari.maximum-pool-size: 5
+  jpa:
+    hibernate.ddl-auto: validate
+    open-in-view: false
+  mvc.problemdetails.enabled: true
+  data.redis:
+    host: ${REDIS_HOST:localhost}
+    port: ${REDIS_PORT:6379}
+    password: ${REDIS_PASSWORD:}
+    ssl.enabled: ${REDIS_SSL:false}
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP:localhost:9092}
+    consumer:
+      group-id: match-notify-service
+      auto-offset-reset: earliest
+      max-poll-records: 50
+    producer:
+      properties:
+        max.block.ms: 5000
+    listener.type: batch
+  mail:
+    host: ${MAIL_HOST:localhost}
+    port: ${MAIL_PORT:1025}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+server.port: 8082
+management.health:
+  mail.enabled: false
+  redis.enabled: false
+
+app:
+  jwt.secret: ${JWT_SECRET}
+  cors.allowed-origins: ${CORS_ORIGINS:http://localhost:3000,http://localhost:3001,http://localhost:3002}
+  kafka.enabled: ${KAFKA_ENABLED:true}
+  core-api-url: ${CORE_API_URL:http://localhost:8080}
+  public-url: ${PUBLIC_URL:http://localhost:8082}
+  frontend-url: ${FRONTEND_URL:http://localhost:3000}
+  mail-from: ${MAIL_FROM:jobradar@localhost}
+  zone: ${APP_ZONE:Asia/Kolkata}
+  digest-cron: ${DIGEST_CRON:0 0 8 * * *}
+  scoring:
+    prefilter: 25        # keyword score needed before embeddings / LLM are spent on a job
+    min-store: 40        # matches below this are dropped
+    llm-top-n: 15        # per user per batch
+  ai:
+    provider: ${AI_PROVIDER:none}   # none | gemini | groq
+    gemini-api-key: ${GEMINI_API_KEY:}
+    gemini-model: ${GEMINI_MODEL:gemini-2.5-flash}
+    gemini-embedding-model: ${GEMINI_EMBEDDING_MODEL:gemini-embedding-001}
+    groq-api-key: ${GROQ_API_KEY:}
+    groq-model: ${GROQ_MODEL:llama-3.1-8b-instant}

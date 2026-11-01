@@ -1,0 +1,61 @@
+# canonical name|alias|alias  (case-insensitive, whole-word match)
+Java
+Spring Boot|springboot|spring-boot
+Spring Security
+Spring Cloud
+Hibernate|JPA
+Microservices|micro services|micro-services
+REST|RESTful|REST API
+GraphQL
+Kafka|Apache Kafka
+RabbitMQ
+Redis
+PostgreSQL|Postgres
+MySQL
+MongoDB
+Oracle|PL/SQL
+SQL
+JUnit
+Mockito
+Maven
+Gradle
+Docker
+Kubernetes|k8s
+AWS|Amazon Web Services
+Azure
+GCP|Google Cloud
+Terraform
+Jenkins
+GitHub Actions
+CI/CD
+Git
+Linux
+JavaScript
+TypeScript
+React|React.js|ReactJS
+Redux
+Next.js|NextJS
+Angular
+Vue|Vue.js
+Node.js|NodeJS
+Express.js|ExpressJS
+HTML|HTML5
+CSS|CSS3
+Tailwind|Tailwind CSS
+Sass|SCSS
+Micro Frontends|micro frontend|micro-frontends|module federation
+Webpack
+Vite
+Jest
+Vitest
+Cypress
+Playwright
+Python
+Golang
+C#|.NET
+C++
+Elasticsearch
+Agile|Scrum
+System Design
+OAuth|OAuth2
+JWT

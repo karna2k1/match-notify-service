@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="card(card)" style="border:1px solid #e5e7eb;border-radius:12px;padding:16px;margin:0 0 12px">
+  <div style="font-size:12px;color:#6b7280" th:text="${card.match.company} + ' · ' + ${card.match.location ?: (card.match.remote ? 'Remote' : '')}">Company · Location</div>
+  <div style="font-size:16px;font-weight:600;margin:4px 0">
+    <a th:href="${card.match.url}" style="color:#111827;text-decoration:none" th:text="${card.match.title}">Title</a>
+    <span style="background:#eef2ff;color:#4338ca;border-radius:999px;padding:2px 8px;font-size:12px;margin-left:6px"
+          th:text="${card.match.finalScore} + '%'">80%</span>
+  </div>
+  <ul style="margin:8px 0;padding-left:18px;font-size:13px;color:#374151">
+    <li th:each="r : ${card.match.reasons}" th:text="${r}">reason</li>
+  </ul>
+  <div th:if="${!#lists.isEmpty(card.match.skillGaps)}" style="font-size:12px;color:#b45309;margin-bottom:8px"
+       th:text="'Skill gaps: ' + ${#strings.listJoin(card.match.skillGaps, ', ')}">Skill gaps</div>
+  <a th:href="${card.saveUrl}" style="background:#4f46e5;color:#fff;border-radius:8px;padding:6px 12px;font-size:13px;text-decoration:none">Save</a>
+  <a th:href="${card.ignoreUrl}" style="color:#6b7280;font-size:13px;margin-left:12px">Ignore</a>
+</div>
+</body>
+</html>
