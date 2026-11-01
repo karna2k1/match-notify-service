@@ -76,7 +76,33 @@ public class AiClientConfig {
         public boolean llmEnabled() { return true; }
         public boolean embeddingsEnabled() { return true; }
 
+        // free tier allows ~15 requests/minute: pace calls and back off for a minute after a 429
+        private static final long MIN_GAP_MS = 4_500;
+        private long lastCallMs;
+        private long cooldownUntilMs;
+
+        private synchronized boolean acquire() {
+            long now = System.currentTimeMillis();
+            if (now < cooldownUntilMs) return false;
+            long wait = lastCallMs + MIN_GAP_MS - now;
+            if (wait > 0) {
+                try {
+                    Thread.sleep(wait);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return false;
+                }
+            }
+            lastCallMs = System.currentTimeMillis();
+            return true;
+        }
+
+        private synchronized void backOff() {
+            cooldownUntilMs = System.currentTimeMillis() + 60_000;
+        }
+
         public Optional<Verdict> score(String profileSummary, String jobText) {
+            if (!acquire()) return Optional.empty(); // cooling down: caller falls back to keyword/embedding score
             try {
                 var body = Map.of(
                         "contents", List.of(Map.of("parts", List.of(Map.of("text", AiClient.prompt(profileSummary, jobText))))),
@@ -86,6 +112,10 @@ public class AiClientConfig {
                         .body(body).retrieve().body(JsonNode.class);
                 String text = res.path("candidates").path(0).path("content").path("parts").path(0).path("text").asText("");
                 return parseVerdict(mapper, text);
+            } catch (org.springframework.web.client.HttpClientErrorException.TooManyRequests e) {
+                backOff();
+                log.warn("Gemini rate limit hit, pausing LLM scoring for 60s (keyword/embedding scores still apply)");
+                return Optional.empty();
             } catch (Exception e) {
                 log.warn("Gemini score failed: {}", e.getMessage());
                 return Optional.empty();
